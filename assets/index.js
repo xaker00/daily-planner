@@ -1,5 +1,3 @@
-var timeBlockContainer = $('.container');
-
 var debug = true;
 // uncomment next line to disable debug messages.
 //debug = false;
@@ -12,6 +10,7 @@ function renderSchedule(){
     const startTime = 8;    
     const endTime = 12+5;     
 
+    var timeBlockContainer = $('.container');
     var currentHour = parseInt(moment().format('H'));
 
     for(i = startTime; i <= endTime; i++){
@@ -35,8 +34,6 @@ function renderSchedule(){
 
 
         var iconEl = $('<div>').addClass('col-1 saveBtn align-middle text-center h-100');
-        var saveIcon = $('<i>').addClass("material-icons text-center h-100 ").text('save');
-        iconEl.append(saveIcon);
 
         rowEl.append([timeEl, activityEl, iconEl]);
         timeBlockContainer.append(rowEl);
@@ -46,21 +43,14 @@ function renderSchedule(){
 }
 
 
-
-
-
-
-
 function updateDate(){
     $('#currentDay').text(moment().format('dddd MMMM Do YYYY'));
 }
 
 
-
 // update every minute
 setInterval(function(){
     updateDate();
-    renderSchedule();
 }, 60*1000);
 
 
@@ -79,8 +69,14 @@ $('.container').on('click', '.time-block', function(event){
         target.empty().append(textAreaEl);
         textAreaEl.focus();
         textAreaEl.width(textAreaEl.parent().width());
-        textAreaEl.height(textAreaEl.parent().innerHeight()-5);
-        target.addClass('editing')
+        textAreaEl.height(textAreaEl.parent().height()-10);
+        target.addClass('editing');
+
+
+        // add save icon
+        var saveIcon = $('<i>').addClass("material-icons text-center h-100 ").text('save');
+        target.closest('.row').find('.saveBtn').empty().append(saveIcon);
+
     }
 });
 
@@ -94,13 +90,16 @@ $('.container').on('click', '.saveBtn', function(event){
 
     if(timeBlockEl.length){
             
-        var text = timeBlockEl.find('textarea').val();
+        var text = timeBlockEl.find('textarea').val().replace('\n',' ');
         var hour = timeBlockEl.attr('data-hour');
     
         timeBlockEl.empty().text(text);
         timeBlockEl.removeClass('editing');
     
         localStorage.setItem(hour, text);
+
+        // remove the save icon
+        target.closest('.row').find('.saveBtn').empty();
     
         log('value', text);
         log('hour', hour);

@@ -10,8 +10,8 @@ textarea {
   resize: none;
   color: #000000;
   border-left: 1px solid black;
-  /* margin-top: 5px; */
-  line-height: normal;
+  margin: 5px;
+  line-height: 1em;
 }
 
 .jumbotron {
